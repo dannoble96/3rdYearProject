@@ -17,7 +17,11 @@ int main() {
     
     while(1){
         
-        INTCON = 0b10010000; // turn on interrupt
+        if(secNo == 60){
+            updateTime(bcdHour,bcdMin);
+            resetTime();
+        }
+        
         
     }
 

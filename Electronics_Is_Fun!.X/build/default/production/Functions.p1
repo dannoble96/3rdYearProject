@@ -7,12 +7,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _TMR0 `Vuc ~T0 @X0 0 e@1 ]
 "496
 [v _TRISB `Vuc ~T0 @X0 0 e@134 ]
+"208
+[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 "452
 [v _TRISA `Vuc ~T0 @X0 0 e@133 ]
 "164
 [v _PORTA `Vuc ~T0 @X0 0 e@5 ]
-"208
-[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 "624
 [v _INTE `Vb ~T0 @X0 0 e@92 ]
 "628
@@ -27,6 +27,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _T0IE `Vb ~T0 @X0 0 e@93 ]
 "680
 [v _T0IF `Vb ~T0 @X0 0 e@90 ]
+"37 Functions.h
+[v _outputTime `(v ~T0 @X0 0 ef ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -287,24 +289,39 @@ Version 3.2 HI-TECH Software Intermediate Code
 [p x WDTE=OFF ]
 [p x CP=ON ]
 "17
-[v _min `i ~T0 @X0 1 e ]
+[v _bcdMin `c ~T0 @X0 1 e ]
 [; ;Functions.h: 15: __config("__CONFIG", "pic", "FOSC_XT & WDTE_OFF & PWRTE_OFF & CP_ON");
-[; ;Functions.h: 17: int min;
+[; ;Functions.h: 17: signed char bcdMin;
 "18
-[v _hour `i ~T0 @X0 1 e ]
-[; ;Functions.h: 18: int hour;
+[v _bcdHour `c ~T0 @X0 1 e ]
+[; ;Functions.h: 18: signed char bcdHour;
 "19
-[v _secNo `i ~T0 @X0 1 e ]
-[; ;Functions.h: 19: int secNo;
+[v _hourTens `c ~T0 @X0 1 e ]
+[; ;Functions.h: 19: signed char hourTens;
 "20
-[v _timerCount `i ~T0 @X0 1 e ]
-[; ;Functions.h: 20: int timerCount;
+[v _hourUnits `c ~T0 @X0 1 e ]
+[; ;Functions.h: 20: signed char hourUnits;
 "21
+[v _minTens `c ~T0 @X0 1 e ]
+[; ;Functions.h: 21: signed char minTens;
+"22
+[v _minUnits `c ~T0 @X0 1 e ]
+[; ;Functions.h: 22: signed char minUnits;
+"23
+[v _secNo `i ~T0 @X0 1 e ]
+[; ;Functions.h: 23: int secNo;
+"24
+[v _timerCount `i ~T0 @X0 1 e ]
+[; ;Functions.h: 24: int timerCount;
+"25
 [v _synced `i ~T0 @X0 1 e ]
-[; ;Functions.h: 21: int synced;
-[; ;Functions.h: 23: void init (void);
-[; ;Functions.h: 25: void resetTime (void);
-[; ;Functions.h: 27: void minMark(void);
+[; ;Functions.h: 25: int synced;
+[; ;Functions.h: 27: void init (void);
+[; ;Functions.h: 29: void resetTime (void);
+[; ;Functions.h: 31: void minMark(void);
+[; ;Functions.h: 33: void setDisplayOutput(signed char number);
+[; ;Functions.h: 35: void updateTime(signed char bcdHour, signed char bcdMin);
+[; ;Functions.h: 37: void outputTime(void);
 "3 Functions.c
 [v _init `(v ~T0 @X0 1 ef ]
 "4
@@ -325,52 +342,51 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;Functions.c: 11: TRISB = 0b00000001;
 "11
 [e = _TRISB -> -> 1 `i `uc ]
-[; ;Functions.c: 12: TRISA = 0x00;
+[; ;Functions.c: 12: PORTB = 0x00;
 "12
-[e = _TRISA -> -> 0 `i `uc ]
-[; ;Functions.c: 14: PORTA = 0x00;
-"14
-[e = _PORTA -> -> 0 `i `uc ]
-[; ;Functions.c: 15: PORTB = 0x00;
-"15
 [e = _PORTB -> -> 0 `i `uc ]
-[; ;Functions.c: 17: min = 0x00;
-"17
-[e = _min -> 0 `i ]
-[; ;Functions.c: 18: hour = 0x00;
+[; ;Functions.c: 15: TRISA = 0x00;
+"15
+[e = _TRISA -> -> 0 `i `uc ]
+[; ;Functions.c: 16: PORTA = 0x00;
+"16
+[e = _PORTA -> -> 0 `i `uc ]
+[; ;Functions.c: 18: bcdMin = 0x00;
 "18
-[e = _hour -> 0 `i ]
-[; ;Functions.c: 20: synced = 0;
-"20
-[e = _synced -> 0 `i ]
-[; ;Functions.c: 21: }
+[e = _bcdMin -> -> 0 `i `c ]
+[; ;Functions.c: 19: bcdHour = 0x00;
+"19
+[e = _bcdHour -> -> 0 `i `c ]
+[; ;Functions.c: 21: synced = 0;
 "21
+[e = _synced -> 0 `i ]
+[; ;Functions.c: 22: INTCON = 0b10010000;
+"22
+[e = _INTCON -> -> 144 `i `uc ]
+[; ;Functions.c: 23: }
+"23
 [e :UE 23 ]
 }
 [v $root$_extInterrupt `(v ~T0 @X0 0 e ]
-[v F297 `(v ~T0 @X0 1 tf ]
-"23
-[v _extInterrupt `IF297 ~T0 @X0 1 e ]
-"24
-{
-[; ;Functions.c: 23: void interrupt extInterrupt (void)
-[; ;Functions.c: 24: {
-[e :U _extInterrupt ]
-[f ]
-[; ;Functions.c: 25: if (INTE && INTF)
+[v F308 `(v ~T0 @X0 1 tf ]
 "25
-[e $ ! && _INTE _INTF 25  ]
-[; ;Functions.c: 26: {
+[v _extInterrupt `IF308 ~T0 @X0 1 e ]
 "26
 {
-[; ;Functions.c: 27: INTF = 0;
+[; ;Functions.c: 25: void interrupt extInterrupt (void)
+[; ;Functions.c: 26: {
+[e :U _extInterrupt ]
+[f ]
+[; ;Functions.c: 27: if (INTE && INTF){
 "27
+[e $ ! && _INTE _INTF 25  ]
+{
+[; ;Functions.c: 28: INTF = 0;
+"28
 [e = _INTF -> -> 0 `i `b ]
-[; ;Functions.c: 29: if(synced == 1)
-"29
-[e $ ! == _synced -> 1 `i 26  ]
-[; ;Functions.c: 30: {
+[; ;Functions.c: 30: if(synced == 1){
 "30
+[e $ ! == _synced -> 1 `i 26  ]
 {
 [; ;Functions.c: 31: secNo++;
 "31
@@ -378,18 +394,18 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;Functions.c: 32: _delay((unsigned long)((150)*(4000000/4000.0)));
 "32
 [e ( __delay (1 -> * -> -> 150 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
-[; ;Functions.c: 34: if(secNo > 38 && secNo < 45)
+[; ;Functions.c: 34: if(secNo > 1 && secNo < 6 )
 "34
-[e $ ! && > _secNo -> 38 `i < _secNo -> 45 `i 27  ]
+[e $ ! && > _secNo -> 1 `i < _secNo -> 6 `i 27  ]
 [; ;Functions.c: 35: {
 "35
 {
-[; ;Functions.c: 36: hour = RB0;
+[; ;Functions.c: 36: bcdHour |= RB0;
 "36
-[e = _hour -> _RB0 `i ]
-[; ;Functions.c: 37: hour = hour << 1;
+[e =| _bcdHour -> -> _RB0 `i `c ]
+[; ;Functions.c: 37: bcdHour = bcdHour << 1;
 "37
-[e = _hour << _hour -> 1 `i ]
+[e = _bcdHour -> << -> _bcdHour `i -> 1 `i `c ]
 "38
 }
 [; ;Functions.c: 38: }
@@ -401,12 +417,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;Functions.c: 40: {
 "40
 {
-[; ;Functions.c: 41: min = RB0;
+[; ;Functions.c: 41: bcdMin |= RB0;
 "41
-[e = _min -> _RB0 `i ]
-[; ;Functions.c: 42: min = min << 1;
+[e =| _bcdMin -> -> _RB0 `i `c ]
+[; ;Functions.c: 42: bcdMin = bcdMin << 1;
 "42
-[e = _min << _min -> 1 `i ]
+[e = _bcdMin -> << -> _bcdMin `i -> 1 `i `c ]
 "43
 }
 [e :U 29 ]
@@ -423,114 +439,684 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U 26 ]
 "48
 }
+[e :U 25 ]
 [; ;Functions.c: 46: }
 [; ;Functions.c: 48: }
-[e $U 30  ]
+[; ;Functions.c: 49: if (T0IE && T0IF){
 "49
-[e :U 25 ]
-[; ;Functions.c: 49: else if (T0IE && T0IF)
-[e $ ! && _T0IE _T0IF 31  ]
-[; ;Functions.c: 50: {
-"50
+[e $ ! && _T0IE _T0IF 30  ]
 {
+[; ;Functions.c: 50: T0IF = 0;
+"50
+[e = _T0IF -> -> 0 `i `b ]
 [; ;Functions.c: 51: timerCount++;
 "51
 [e ++ _timerCount -> 1 `i ]
-[; ;Functions.c: 53: if (timerCount == 7)
+[; ;Functions.c: 53: if (timerCount == 7){
 "53
-[e $ ! == _timerCount -> 7 `i 32  ]
-[; ;Functions.c: 54: {
-"54
+[e $ ! == _timerCount -> 7 `i 31  ]
 {
-[; ;Functions.c: 55: timerCount = 0;
-"55
+[; ;Functions.c: 54: timerCount = 0;
+"54
 [e = _timerCount -> 0 `i ]
-[; ;Functions.c: 57: synced = 1;
-"57
+[; ;Functions.c: 56: synced = 1;
+"56
 [e = _synced -> 1 `i ]
 "58
 }
-[e :U 32 ]
-"59
-}
 [e :U 31 ]
-"61
-[e :U 30 ]
 [; ;Functions.c: 58: }
-[; ;Functions.c: 59: }
-[; ;Functions.c: 61: }
+[; ;Functions.c: 59: outputTime();
+"59
+[e ( _outputTime ..  ]
+"60
+}
+[e :U 30 ]
+[; ;Functions.c: 60: }
+[; ;Functions.c: 62: }
+"62
 [e :UE 24 ]
 }
-"64
-[v _resetTime `(v ~T0 @X0 1 ef ]
 "65
+[v _resetTime `(v ~T0 @X0 1 ef ]
+"66
 {
-[; ;Functions.c: 64: void resetTime(void)
-[; ;Functions.c: 65: {
+[; ;Functions.c: 65: void resetTime(void)
+[; ;Functions.c: 66: {
 [e :U _resetTime ]
 [f ]
-[; ;Functions.c: 66: min = 0x00;
-"66
-[e = _min -> 0 `i ]
-[; ;Functions.c: 67: hour = 0x00;
+[; ;Functions.c: 67: bcdMin = 0x00;
 "67
-[e = _hour -> 0 `i ]
-[; ;Functions.c: 68: secNo = 0;
+[e = _bcdMin -> -> 0 `i `c ]
+[; ;Functions.c: 68: bcdHour = 0x00;
 "68
-[e = _secNo -> 0 `i ]
-[; ;Functions.c: 69: }
+[e = _bcdHour -> -> 0 `i `c ]
+[; ;Functions.c: 69: secNo = 0;
 "69
-[e :UE 33 ]
-}
+[e = _secNo -> 0 `i ]
+[; ;Functions.c: 70: return;
+"70
+[e $UE 32  ]
+[; ;Functions.c: 71: }
 "71
+[e :UE 32 ]
+}
+"73
 [v _minMark `(v ~T0 @X0 1 ef ]
-"72
+"74
 {
-[; ;Functions.c: 71: void minMark(void)
-[; ;Functions.c: 72: {
+[; ;Functions.c: 73: void minMark(void)
+[; ;Functions.c: 74: {
 [e :U _minMark ]
 [f ]
-[; ;Functions.c: 73: synced = 0;
-"73
+[; ;Functions.c: 75: synced = 0;
+"75
 [e = _synced -> 0 `i ]
-[; ;Functions.c: 74: do{
-"74
-[e :U 37 ]
-{
-[; ;Functions.c: 76: if(RB0 == 0){
+[; ;Functions.c: 76: do{
 "76
-[e $ ! == -> _RB0 `i -> 0 `i 38  ]
-{
-[; ;Functions.c: 77: INTCON |= 0b00100000;
-"77
-[e =| _INTCON -> -> 32 `i `uc ]
-"78
-}
-[; ;Functions.c: 78: }
-[e $U 39  ]
-"79
-[e :U 38 ]
-[; ;Functions.c: 79: else{
-{
-[; ;Functions.c: 80: INTCON = 0b10010000;
-"80
-[e = _INTCON -> -> 144 `i `uc ]
-[; ;Functions.c: 81: TMR0 = 230;
-"81
-[e = _TMR0 -> -> 230 `i `uc ]
-[; ;Functions.c: 82: timerCount = 0;
-"82
-[e = _timerCount -> 0 `i ]
-"83
-}
-[e :U 39 ]
-"85
-}
-[; ;Functions.c: 83: }
-[; ;Functions.c: 85: }while (!(RB0 == 0 && synced == 1));
-[e $ ! && == -> _RB0 `i -> 0 `i == _synced -> 1 `i 37  ]
 [e :U 36 ]
-[; ;Functions.c: 86: }
+{
+[; ;Functions.c: 78: if(RB0 == 0 && synced == 0){
+"78
+[e $ ! && == -> _RB0 `i -> 0 `i == _synced -> 0 `i 37  ]
+{
+[; ;Functions.c: 79: INTCON |= 0b00100000;
+"79
+[e =| _INTCON -> -> 32 `i `uc ]
+"80
+}
+[; ;Functions.c: 80: }
+[e $U 38  ]
+"81
+[e :U 37 ]
+[; ;Functions.c: 81: else{
+{
+[; ;Functions.c: 82: INTCON = 0b10010000;
+"82
+[e = _INTCON -> -> 144 `i `uc ]
+[; ;Functions.c: 83: TMR0 = 230;
+"83
+[e = _TMR0 -> -> 230 `i `uc ]
+[; ;Functions.c: 84: timerCount = 0;
+"84
+[e = _timerCount -> 0 `i ]
+[; ;Functions.c: 85: synced = 1;
+"85
+[e = _synced -> 1 `i ]
 "86
-[e :UE 34 ]
+}
+[e :U 38 ]
+"88
+}
+[; ;Functions.c: 86: }
+[; ;Functions.c: 88: }while (!(RB0 == 0 && synced == 1));
+[e $ ! && == -> _RB0 `i -> 0 `i == _synced -> 1 `i 36  ]
+[e :U 35 ]
+[; ;Functions.c: 89: return;
+"89
+[e $UE 33  ]
+[; ;Functions.c: 90: }
+"90
+[e :UE 33 ]
+}
+"92
+[v _setDisplayOutput `(v ~T0 @X0 1 ef1`c ]
+"93
+{
+[; ;Functions.c: 92: void setDisplayOutput(signed char number)
+[; ;Functions.c: 93: {
+[e :U _setDisplayOutput ]
+"92
+[v _number `c ~T0 @X0 1 r1 ]
+"93
+[f ]
+[; ;Functions.c: 94: switch (number){
+"94
+[e $U 41  ]
+{
+[; ;Functions.c: 95: case 0 :
+"95
+[e :U 42 ]
+[; ;Functions.c: 96: PORTB = 0b11111100;
+"96
+[e = _PORTB -> -> 252 `i `uc ]
+[; ;Functions.c: 97: break;
+"97
+[e $U 40  ]
+[; ;Functions.c: 98: case 1 :
+"98
+[e :U 43 ]
+[; ;Functions.c: 99: PORTB = 0b01100000;
+"99
+[e = _PORTB -> -> 96 `i `uc ]
+[; ;Functions.c: 100: break;
+"100
+[e $U 40  ]
+[; ;Functions.c: 101: case 2 :
+"101
+[e :U 44 ]
+[; ;Functions.c: 102: PORTB = 0b11011100;
+"102
+[e = _PORTB -> -> 220 `i `uc ]
+[; ;Functions.c: 103: break;
+"103
+[e $U 40  ]
+[; ;Functions.c: 104: case 3 :
+"104
+[e :U 45 ]
+[; ;Functions.c: 105: PORTB = 0b11110010;
+"105
+[e = _PORTB -> -> 242 `i `uc ]
+[; ;Functions.c: 106: break;
+"106
+[e $U 40  ]
+[; ;Functions.c: 107: case 4 :
+"107
+[e :U 46 ]
+[; ;Functions.c: 108: PORTB = 0b01100110;
+"108
+[e = _PORTB -> -> 102 `i `uc ]
+[; ;Functions.c: 109: break;
+"109
+[e $U 40  ]
+[; ;Functions.c: 110: case 5 :
+"110
+[e :U 47 ]
+[; ;Functions.c: 111: PORTB = 0b10110110;
+"111
+[e = _PORTB -> -> 182 `i `uc ]
+[; ;Functions.c: 112: break;
+"112
+[e $U 40  ]
+[; ;Functions.c: 113: case 6 :
+"113
+[e :U 48 ]
+[; ;Functions.c: 114: PORTB = 0b10111110;
+"114
+[e = _PORTB -> -> 190 `i `uc ]
+[; ;Functions.c: 115: break;
+"115
+[e $U 40  ]
+[; ;Functions.c: 116: case 7 :
+"116
+[e :U 49 ]
+[; ;Functions.c: 117: PORTB = 0b11100000;
+"117
+[e = _PORTB -> -> 224 `i `uc ]
+[; ;Functions.c: 118: break;
+"118
+[e $U 40  ]
+[; ;Functions.c: 119: case 8 :
+"119
+[e :U 50 ]
+[; ;Functions.c: 120: PORTB = 0b11111110;
+"120
+[e = _PORTB -> -> 254 `i `uc ]
+[; ;Functions.c: 121: break;
+"121
+[e $U 40  ]
+[; ;Functions.c: 122: case 9 :
+"122
+[e :U 51 ]
+[; ;Functions.c: 123: PORTB = 0b1110011;
+"123
+[e = _PORTB -> -> 115 `i `uc ]
+[; ;Functions.c: 124: break;
+"124
+[e $U 40  ]
+[; ;Functions.c: 125: case 10 :
+"125
+[e :U 52 ]
+[; ;Functions.c: 126: PORTB = 0b10001110;
+"126
+[e = _PORTB -> -> 142 `i `uc ]
+[; ;Functions.c: 127: break;
+"127
+[e $U 40  ]
+[; ;Functions.c: 128: default :
+"128
+[e :U 53 ]
+[; ;Functions.c: 129: PORTB = 0b00000010;
+"129
+[e = _PORTB -> -> 2 `i `uc ]
+[; ;Functions.c: 130: break;
+"130
+[e $U 40  ]
+"132
+}
+[; ;Functions.c: 132: }
+[e $U 40  ]
+"94
+[e :U 41 ]
+[e [\ _number , $ -> -> 0 `i `c 42
+ , $ -> -> 1 `i `c 43
+ , $ -> -> 2 `i `c 44
+ , $ -> -> 3 `i `c 45
+ , $ -> -> 4 `i `c 46
+ , $ -> -> 5 `i `c 47
+ , $ -> -> 6 `i `c 48
+ , $ -> -> 7 `i `c 49
+ , $ -> -> 8 `i `c 50
+ , $ -> -> 9 `i `c 51
+ , $ -> -> 10 `i `c 52
+ 53 ]
+"132
+[e :U 40 ]
+[; ;Functions.c: 133: }
+"133
+[e :UE 39 ]
+}
+"136
+[v _updateTime `(v ~T0 @X0 1 ef2`c`c ]
+"137
+{
+[; ;Functions.c: 136: void updateTime(signed char bcdHour, signed char bcdMin)
+[; ;Functions.c: 137: {
+[e :U _updateTime ]
+[v _bcdHour `c ~T0 @X0 1 r1 ]
+[v _bcdMin `c ~T0 @X0 1 r2 ]
+[f ]
+[; ;Functions.c: 138: hourTens = (bcdHour & 0b00110000);
+"138
+[e = _hourTens -> & -> _bcdHour `i -> 48 `i `c ]
+[; ;Functions.c: 139: hourUnits = (bcdHour & 0b00001111);
+"139
+[e = _hourUnits -> & -> _bcdHour `i -> 15 `i `c ]
+[; ;Functions.c: 140: minTens = (bcdMin & 0b00110000);
+"140
+[e = _minTens -> & -> _bcdMin `i -> 48 `i `c ]
+[; ;Functions.c: 141: minUnits = (bcdMin & 0b00001111);
+"141
+[e = _minUnits -> & -> _bcdMin `i -> 15 `i `c ]
+"142
+[v _hourTensDis `c ~T0 @X0 1 a ]
+[; ;Functions.c: 142: signed char hourTensDis = hourTens;
+[e = _hourTensDis _hourTens ]
+[; ;Functions.c: 144: switch(hourTens){
+"144
+[e $U 56  ]
+{
+[; ;Functions.c: 145: case 0b00000000 :
+"145
+[e :U 57 ]
+[; ;Functions.c: 146: hourTens = 0;
+"146
+[e = _hourTens -> -> 0 `i `c ]
+[; ;Functions.c: 147: break;
+"147
+[e $U 55  ]
+[; ;Functions.c: 148: case 0b00010000 :
+"148
+[e :U 58 ]
+[; ;Functions.c: 149: hourTens = 1;
+"149
+[e = _hourTens -> -> 1 `i `c ]
+[; ;Functions.c: 150: break;
+"150
+[e $U 55  ]
+[; ;Functions.c: 151: case 0b00100000 :
+"151
+[e :U 59 ]
+[; ;Functions.c: 152: hourTens = 2;
+"152
+[e = _hourTens -> -> 2 `i `c ]
+[; ;Functions.c: 153: break;
+"153
+[e $U 55  ]
+[; ;Functions.c: 154: default :
+"154
+[e :U 60 ]
+[; ;Functions.c: 155: hourTens = 10;
+"155
+[e = _hourTens -> -> 10 `i `c ]
+[; ;Functions.c: 156: break;
+"156
+[e $U 55  ]
+"157
+}
+[; ;Functions.c: 157: }
+[e $U 55  ]
+"144
+[e :U 56 ]
+[e [\ _hourTens , $ -> -> 0 `i `c 57
+ , $ -> -> 16 `i `c 58
+ , $ -> -> 32 `i `c 59
+ 60 ]
+"157
+[e :U 55 ]
+[; ;Functions.c: 159: switch(hourUnits){
+"159
+[e $U 62  ]
+{
+[; ;Functions.c: 160: case 0b00000000 :
+"160
+[e :U 63 ]
+[; ;Functions.c: 161: hourUnits = 0;
+"161
+[e = _hourUnits -> -> 0 `i `c ]
+[; ;Functions.c: 162: break;
+"162
+[e $U 61  ]
+[; ;Functions.c: 163: case 0b00000001:
+"163
+[e :U 64 ]
+[; ;Functions.c: 164: hourUnits = 1;
+"164
+[e = _hourUnits -> -> 1 `i `c ]
+[; ;Functions.c: 165: break;
+"165
+[e $U 61  ]
+[; ;Functions.c: 166: case 0b00000010:
+"166
+[e :U 65 ]
+[; ;Functions.c: 167: hourUnits = 2;
+"167
+[e = _hourUnits -> -> 2 `i `c ]
+[; ;Functions.c: 168: break;
+"168
+[e $U 61  ]
+[; ;Functions.c: 169: case 0b00000011:
+"169
+[e :U 66 ]
+[; ;Functions.c: 170: hourUnits = 3;
+"170
+[e = _hourUnits -> -> 3 `i `c ]
+[; ;Functions.c: 171: break;
+"171
+[e $U 61  ]
+[; ;Functions.c: 172: case 0b00000100:
+"172
+[e :U 67 ]
+[; ;Functions.c: 173: hourUnits = 4;
+"173
+[e = _hourUnits -> -> 4 `i `c ]
+[; ;Functions.c: 174: break;
+"174
+[e $U 61  ]
+[; ;Functions.c: 175: case 0b00000101:
+"175
+[e :U 68 ]
+[; ;Functions.c: 176: hourUnits = 5;
+"176
+[e = _hourUnits -> -> 5 `i `c ]
+[; ;Functions.c: 177: break;
+"177
+[e $U 61  ]
+[; ;Functions.c: 178: case 0b00000110:
+"178
+[e :U 69 ]
+[; ;Functions.c: 179: hourUnits = 6;
+"179
+[e = _hourUnits -> -> 6 `i `c ]
+[; ;Functions.c: 180: break;
+"180
+[e $U 61  ]
+[; ;Functions.c: 181: case 0b00000111:
+"181
+[e :U 70 ]
+[; ;Functions.c: 182: hourUnits = 7;
+"182
+[e = _hourUnits -> -> 7 `i `c ]
+[; ;Functions.c: 183: break;
+"183
+[e $U 61  ]
+[; ;Functions.c: 184: case 0b00001000:
+"184
+[e :U 71 ]
+[; ;Functions.c: 185: hourUnits = 8;
+"185
+[e = _hourUnits -> -> 8 `i `c ]
+[; ;Functions.c: 186: break;
+"186
+[e $U 61  ]
+[; ;Functions.c: 187: case 0b00001001:
+"187
+[e :U 72 ]
+[; ;Functions.c: 188: hourUnits = 9;
+"188
+[e = _hourUnits -> -> 9 `i `c ]
+[; ;Functions.c: 189: break;
+"189
+[e $U 61  ]
+[; ;Functions.c: 190: default :
+"190
+[e :U 73 ]
+[; ;Functions.c: 191: hourUnits = 10;
+"191
+[e = _hourUnits -> -> 10 `i `c ]
+[; ;Functions.c: 192: break;
+"192
+[e $U 61  ]
+"193
+}
+[; ;Functions.c: 193: }
+[e $U 61  ]
+"159
+[e :U 62 ]
+[e [\ _hourUnits , $ -> -> 0 `i `c 63
+ , $ -> -> 1 `i `c 64
+ , $ -> -> 2 `i `c 65
+ , $ -> -> 3 `i `c 66
+ , $ -> -> 4 `i `c 67
+ , $ -> -> 5 `i `c 68
+ , $ -> -> 6 `i `c 69
+ , $ -> -> 7 `i `c 70
+ , $ -> -> 8 `i `c 71
+ , $ -> -> 9 `i `c 72
+ 73 ]
+"193
+[e :U 61 ]
+[; ;Functions.c: 195: switch(minTens){
+"195
+[e $U 75  ]
+{
+[; ;Functions.c: 196: case 0b00000000 :
+"196
+[e :U 76 ]
+[; ;Functions.c: 197: minTens = 0;
+"197
+[e = _minTens -> -> 0 `i `c ]
+[; ;Functions.c: 198: break;
+"198
+[e $U 74  ]
+[; ;Functions.c: 199: case 0b00010000 :
+"199
+[e :U 77 ]
+[; ;Functions.c: 200: minTens = 1;
+"200
+[e = _minTens -> -> 1 `i `c ]
+[; ;Functions.c: 201: break;
+"201
+[e $U 74  ]
+[; ;Functions.c: 202: case 0b00100000 :
+"202
+[e :U 78 ]
+[; ;Functions.c: 203: minTens = 2;
+"203
+[e = _minTens -> -> 2 `i `c ]
+[; ;Functions.c: 204: break;
+"204
+[e $U 74  ]
+[; ;Functions.c: 205: default :
+"205
+[e :U 79 ]
+[; ;Functions.c: 206: minTens = 10;
+"206
+[e = _minTens -> -> 10 `i `c ]
+[; ;Functions.c: 207: break;
+"207
+[e $U 74  ]
+"208
+}
+[; ;Functions.c: 208: }
+[e $U 74  ]
+"195
+[e :U 75 ]
+[e [\ _minTens , $ -> -> 0 `i `c 76
+ , $ -> -> 16 `i `c 77
+ , $ -> -> 32 `i `c 78
+ 79 ]
+"208
+[e :U 74 ]
+[; ;Functions.c: 211: switch(minUnits){
+"211
+[e $U 81  ]
+{
+[; ;Functions.c: 212: case 0b00000000 :
+"212
+[e :U 82 ]
+[; ;Functions.c: 213: minUnits = 0;
+"213
+[e = _minUnits -> -> 0 `i `c ]
+[; ;Functions.c: 214: break;
+"214
+[e $U 80  ]
+[; ;Functions.c: 215: case 0b00000001:
+"215
+[e :U 83 ]
+[; ;Functions.c: 216: minUnits = 1;
+"216
+[e = _minUnits -> -> 1 `i `c ]
+[; ;Functions.c: 217: break;
+"217
+[e $U 80  ]
+[; ;Functions.c: 218: case 0b00000010:
+"218
+[e :U 84 ]
+[; ;Functions.c: 219: minUnits = 2;
+"219
+[e = _minUnits -> -> 2 `i `c ]
+[; ;Functions.c: 220: break;
+"220
+[e $U 80  ]
+[; ;Functions.c: 221: case 0b00000011:
+"221
+[e :U 85 ]
+[; ;Functions.c: 222: minUnits = 3;
+"222
+[e = _minUnits -> -> 3 `i `c ]
+[; ;Functions.c: 223: break;
+"223
+[e $U 80  ]
+[; ;Functions.c: 224: case 0b00000100:
+"224
+[e :U 86 ]
+[; ;Functions.c: 225: minUnits = 4;
+"225
+[e = _minUnits -> -> 4 `i `c ]
+[; ;Functions.c: 226: break;
+"226
+[e $U 80  ]
+[; ;Functions.c: 227: case 0b00000101:
+"227
+[e :U 87 ]
+[; ;Functions.c: 228: minUnits = 5;
+"228
+[e = _minUnits -> -> 5 `i `c ]
+[; ;Functions.c: 229: break;
+"229
+[e $U 80  ]
+[; ;Functions.c: 230: case 0b00000110:
+"230
+[e :U 88 ]
+[; ;Functions.c: 231: minUnits = 6;
+"231
+[e = _minUnits -> -> 6 `i `c ]
+[; ;Functions.c: 232: break;
+"232
+[e $U 80  ]
+[; ;Functions.c: 233: case 0b00000111:
+"233
+[e :U 89 ]
+[; ;Functions.c: 234: minUnits = 7;
+"234
+[e = _minUnits -> -> 7 `i `c ]
+[; ;Functions.c: 235: break;
+"235
+[e $U 80  ]
+[; ;Functions.c: 236: case 0b00001000:
+"236
+[e :U 90 ]
+[; ;Functions.c: 237: minUnits = 8;
+"237
+[e = _minUnits -> -> 8 `i `c ]
+[; ;Functions.c: 238: break;
+"238
+[e $U 80  ]
+[; ;Functions.c: 239: case 0b00001001:
+"239
+[e :U 91 ]
+[; ;Functions.c: 240: minUnits = 9;
+"240
+[e = _minUnits -> -> 9 `i `c ]
+[; ;Functions.c: 241: break;
+"241
+[e $U 80  ]
+[; ;Functions.c: 242: default :
+"242
+[e :U 92 ]
+[; ;Functions.c: 243: minUnits = 10;
+"243
+[e = _minUnits -> -> 10 `i `c ]
+[; ;Functions.c: 244: break;
+"244
+[e $U 80  ]
+"245
+}
+[; ;Functions.c: 245: }
+[e $U 80  ]
+"211
+[e :U 81 ]
+[e [\ _minUnits , $ -> -> 0 `i `c 82
+ , $ -> -> 1 `i `c 83
+ , $ -> -> 2 `i `c 84
+ , $ -> -> 3 `i `c 85
+ , $ -> -> 4 `i `c 86
+ , $ -> -> 5 `i `c 87
+ , $ -> -> 6 `i `c 88
+ , $ -> -> 7 `i `c 89
+ , $ -> -> 8 `i `c 90
+ , $ -> -> 9 `i `c 91
+ 92 ]
+"245
+[e :U 80 ]
+[; ;Functions.c: 246: }
+"246
+[e :UE 54 ]
+}
+"247
+[v _outputTime `(v ~T0 @X0 1 ef ]
+"248
+{
+[; ;Functions.c: 247: void outputTime(void)
+[; ;Functions.c: 248: {
+[e :U _outputTime ]
+[f ]
+[; ;Functions.c: 250: PORTA = 0b0001;
+"250
+[e = _PORTA -> -> 1 `i `uc ]
+[; ;Functions.c: 251: setDisplayOutput(hourTens);
+"251
+[e ( _setDisplayOutput (1 _hourTens ]
+[; ;Functions.c: 252: PORTA = 0b0010;
+"252
+[e = _PORTA -> -> 2 `i `uc ]
+[; ;Functions.c: 253: setDisplayOutput(minTens);
+"253
+[e ( _setDisplayOutput (1 _minTens ]
+[; ;Functions.c: 254: PORTA = 0b0100;
+"254
+[e = _PORTA -> -> 4 `i `uc ]
+[; ;Functions.c: 255: setDisplayOutput(minUnits);
+"255
+[e ( _setDisplayOutput (1 _minUnits ]
+[; ;Functions.c: 256: PORTA = 0b1000;
+"256
+[e = _PORTA -> -> 8 `i `uc ]
+[; ;Functions.c: 257: setDisplayOutput(hourUnits);
+"257
+[e ( _setDisplayOutput (1 _hourUnits ]
+[; ;Functions.c: 258: }
+"258
+[e :UE 93 ]
 }

@@ -1,13 +1,13 @@
 Version 3.2 HI-TECH Software Intermediate Code
 [p mainexit ]
-"23 Functions.h
+"27 Functions.h
 [v _init `(v ~T0 @X0 0 ef ]
-"25
+"29
 [v _resetTime `(v ~T0 @X0 0 ef ]
-"27
+"31
 [v _minMark `(v ~T0 @X0 0 ef ]
-"304 C:\Program Files (x86)\Microchip\xc8\v1.44\include\pic16f84a.h
-[v _INTCON `Vuc ~T0 @X0 0 e@11 ]
+"35
+[v _updateTime `(v ~T0 @X0 0 ef2`c`c ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -268,24 +268,39 @@ Version 3.2 HI-TECH Software Intermediate Code
 [p x WDTE=OFF ]
 [p x CP=ON ]
 "17
-[v _min `i ~T0 @X0 1 e ]
+[v _bcdMin `c ~T0 @X0 1 e ]
 [; ;Functions.h: 15: __config("__CONFIG", "pic", "FOSC_XT & WDTE_OFF & PWRTE_OFF & CP_ON");
-[; ;Functions.h: 17: int min;
+[; ;Functions.h: 17: signed char bcdMin;
 "18
-[v _hour `i ~T0 @X0 1 e ]
-[; ;Functions.h: 18: int hour;
+[v _bcdHour `c ~T0 @X0 1 e ]
+[; ;Functions.h: 18: signed char bcdHour;
 "19
-[v _secNo `i ~T0 @X0 1 e ]
-[; ;Functions.h: 19: int secNo;
+[v _hourTens `c ~T0 @X0 1 e ]
+[; ;Functions.h: 19: signed char hourTens;
 "20
-[v _timerCount `i ~T0 @X0 1 e ]
-[; ;Functions.h: 20: int timerCount;
+[v _hourUnits `c ~T0 @X0 1 e ]
+[; ;Functions.h: 20: signed char hourUnits;
 "21
+[v _minTens `c ~T0 @X0 1 e ]
+[; ;Functions.h: 21: signed char minTens;
+"22
+[v _minUnits `c ~T0 @X0 1 e ]
+[; ;Functions.h: 22: signed char minUnits;
+"23
+[v _secNo `i ~T0 @X0 1 e ]
+[; ;Functions.h: 23: int secNo;
+"24
+[v _timerCount `i ~T0 @X0 1 e ]
+[; ;Functions.h: 24: int timerCount;
+"25
 [v _synced `i ~T0 @X0 1 e ]
-[; ;Functions.h: 21: int synced;
-[; ;Functions.h: 23: void init (void);
-[; ;Functions.h: 25: void resetTime (void);
-[; ;Functions.h: 27: void minMark(void);
+[; ;Functions.h: 25: int synced;
+[; ;Functions.h: 27: void init (void);
+[; ;Functions.h: 29: void resetTime (void);
+[; ;Functions.h: 31: void minMark(void);
+[; ;Functions.h: 33: void setDisplayOutput(signed char number);
+[; ;Functions.h: 35: void updateTime(signed char bcdHour, signed char bcdMin);
+[; ;Functions.h: 37: void outputTime(void);
 [v $root$_main `(v ~T0 @X0 0 e ]
 "12 Main.c
 [v _main `(i ~T0 @X0 1 ef ]
@@ -306,20 +321,31 @@ Version 3.2 HI-TECH Software Intermediate Code
 "18
 [e :U 25 ]
 {
-[; ;Main.c: 20: INTCON = 0b10010000;
+[; ;Main.c: 20: if(secNo == 60){
 "20
-[e = _INTCON -> -> 144 `i `uc ]
+[e $ ! == _secNo -> 60 `i 27  ]
+{
+[; ;Main.c: 21: updateTime(bcdHour,bcdMin);
+"21
+[e ( _updateTime (2 , _bcdHour _bcdMin ]
+[; ;Main.c: 22: resetTime();
 "22
+[e ( _resetTime ..  ]
+"23
+}
+[e :U 27 ]
+"26
 }
 [e :U 24 ]
 "18
 [e $U 25  ]
 [e :U 26 ]
-[; ;Main.c: 22: }
-[; ;Main.c: 26: return;
-"26
+[; ;Main.c: 23: }
+[; ;Main.c: 26: }
+[; ;Main.c: 30: return;
+"30
 [e $UE 23  ]
-[; ;Main.c: 27: }
-"27
+[; ;Main.c: 31: }
+"31
 [e :UE 23 ]
 }

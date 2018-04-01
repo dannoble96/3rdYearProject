@@ -387,8 +387,12 @@ extern __bank0 __bit __timeout;
 # 15 "Functions.h"
 __config("__CONFIG", "pic", "FOSC_XT & WDTE_OFF & PWRTE_OFF & CP_ON");
 
-int min;
-int hour;
+signed char bcdMin;
+signed char bcdHour;
+signed char hourTens;
+signed char hourUnits;
+signed char minTens;
+signed char minUnits;
 int secNo;
 int timerCount;
 int synced;
@@ -399,6 +403,12 @@ void resetTime (void);
 
 void minMark(void);
 
+void setDisplayOutput(signed char number);
+
+void updateTime(signed char bcdHour, signed char bcdMin);
+
+void outputTime(void);
+
 # 12 "Main.c"
 int main() {
 
@@ -408,7 +418,11 @@ minMark();
 
 while(1){
 
-INTCON = 0b10010000;
+if(secNo == 60){
+updateTime(bcdHour,bcdMin);
+resetTime();
+}
+
 
 }
 

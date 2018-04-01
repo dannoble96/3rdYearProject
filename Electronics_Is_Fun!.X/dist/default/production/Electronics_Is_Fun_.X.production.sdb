@@ -13,12 +13,18 @@
 [v _memcpyee memcpyee `(v  1 e 1 0 ]
 "3 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Functions.c
 [v _init init `(v  1 e 1 0 ]
-"23
+"25
 [v _extInterrupt extInterrupt `II(v  1 e 1 0 ]
-"64
+"65
 [v _resetTime resetTime `(v  1 e 1 0 ]
-"71
+"73
 [v _minMark minMark `(v  1 e 1 0 ]
+"92
+[v _setDisplayOutput setDisplayOutput `(v  1 e 1 0 ]
+"136
+[v _updateTime updateTime `(v  1 e 1 0 ]
+"247
+[v _outputTime outputTime `(v  1 e 1 0 ]
 "12 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Main.c
 [v _main main `(i  1 e 2 0 ]
 "57 C:\Program Files (x86)\Microchip\xc8\v1.44\include\pic16f84a.h
@@ -46,37 +52,71 @@
 "680
 [v _T0IF T0IF `VEb  1 e 0 @90 ]
 "17 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Functions.h
-[v _min min `i  1 e 2 0 ]
+[v _bcdMin bcdMin `c  1 e 1 0 ]
 "18
-[v _hour hour `i  1 e 2 0 ]
+[v _bcdHour bcdHour `c  1 e 1 0 ]
 "19
-[v _secNo secNo `i  1 e 2 0 ]
+[v _hourTens hourTens `c  1 e 1 0 ]
 "20
-[v _timerCount timerCount `i  1 e 2 0 ]
+[v _hourUnits hourUnits `c  1 e 1 0 ]
 "21
+[v _minTens minTens `c  1 e 1 0 ]
+"22
+[v _minUnits minUnits `c  1 e 1 0 ]
+"23
+[v _secNo secNo `i  1 e 2 0 ]
+"24
+[v _timerCount timerCount `i  1 e 2 0 ]
+"25
 [v _synced synced `i  1 e 2 0 ]
 "12 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Main.c
 [v _main main `(i  1 e 2 0 ]
 {
-"27
+"31
 } 0
-"64 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Functions.c
+"136 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Functions.c
+[v _updateTime updateTime `(v  1 e 1 0 ]
+{
+"137
+[v updateTime@bcdHour bcdHour `c  1 a 1 wreg ]
+"142
+[v updateTime@hourTensDis hourTensDis `c  1 a 1 10 ]
+"137
+[v updateTime@bcdHour bcdHour `c  1 a 1 wreg ]
+[v updateTime@bcdMin bcdMin `c  1 p 1 8 ]
+[v updateTime@bcdHour bcdHour `c  1 a 1 11 ]
+"246
+} 0
+"65
 [v _resetTime resetTime `(v  1 e 1 0 ]
 {
-"69
-} 0
 "71
+} 0
+"73
 [v _minMark minMark `(v  1 e 1 0 ]
 {
-"86
+"90
 } 0
 "3
 [v _init init `(v  1 e 1 0 ]
 {
-"21
-} 0
 "23
+} 0
+"25
 [v _extInterrupt extInterrupt `II(v  1 e 1 0 ]
 {
-"61
+"62
+} 0
+"247
+[v _outputTime outputTime `(v  1 e 1 0 ]
+{
+"258
+} 0
+"92
+[v _setDisplayOutput setDisplayOutput `(v  1 e 1 0 ]
+{
+[v setDisplayOutput@number number `c  1 a 1 wreg ]
+[v setDisplayOutput@number number `c  1 a 1 wreg ]
+[v setDisplayOutput@number number `c  1 a 1 0 ]
+"133
 } 0

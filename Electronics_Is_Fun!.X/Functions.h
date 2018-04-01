@@ -14,8 +14,12 @@
 
 __CONFIG(FOSC_XT & WDTE_OFF & PWRTE_OFF & CP_ON);
 
-int min;
-int hour;
+signed char bcdMin;
+signed char bcdHour;
+signed char hourTens;
+signed char hourUnits;
+signed char minTens;
+signed char minUnits;
 int secNo;
 int timerCount;
 int synced;
@@ -26,6 +30,11 @@ void resetTime (void);
 
 void minMark(void);
 
+void setDisplayOutput(signed char number);
+
+void updateTime(signed char bcdHour, signed char bcdMin);
+
+void outputTime(void);
 
 #ifdef	__cplusplus
 extern "C" {
