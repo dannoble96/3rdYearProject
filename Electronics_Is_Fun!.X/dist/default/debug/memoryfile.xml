@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/debug\Electronics_Is_Fun_.X.debug.hex">
+    <memory name="program">
+      <units>words</units>
+      <length>1024</length>
+      <used>237</used>
+      <free>787</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>68</length>
+      <used>19</used>
+      <free>49</free>
+    </memory>
+  </executable>
+</project>
