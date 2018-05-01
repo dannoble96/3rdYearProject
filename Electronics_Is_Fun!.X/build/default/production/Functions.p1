@@ -330,9 +330,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;Functions.c: 4: {
 [e :U _init ]
 [f ]
-[; ;Functions.c: 5: OPTION_REG = 0b00000111;
+[; ;Functions.c: 5: OPTION_REG = 0b01000111;
 "5
-[e = _OPTION_REG -> -> 7 `i `uc ]
+[e = _OPTION_REG -> -> 71 `i `uc ]
 [; ;Functions.c: 7: INTCON = 0b10000000;
 "7
 [e = _INTCON -> -> 128 `i `uc ]
@@ -516,9 +516,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "76
 [e :U 36 ]
 {
-[; ;Functions.c: 78: if(RB0 == 0 && synced == 0){
+[; ;Functions.c: 78: if(RB0 == 1 && synced == 0){
 "78
-[e $ ! && == -> _RB0 `i -> 0 `i == _synced -> 0 `i 37  ]
+[e $ ! && == -> _RB0 `i -> 1 `i == _synced -> 0 `i 37  ]
 {
 [; ;Functions.c: 79: INTCON |= 0b00100000;
 "79
@@ -549,8 +549,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 "88
 }
 [; ;Functions.c: 86: }
-[; ;Functions.c: 88: }while (!(RB0 == 0 && synced == 1));
-[e $ ! && == -> _RB0 `i -> 0 `i == _synced -> 1 `i 36  ]
+[; ;Functions.c: 88: }while (!(RB0 == 1 && synced == 1));
+[e $ ! && == -> _RB0 `i -> 1 `i == _synced -> 1 `i 36  ]
 [e :U 35 ]
 [; ;Functions.c: 89: return;
 "89
@@ -728,395 +728,199 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;Functions.c: 141: minUnits = (bcdMin & 0b00001111);
 "141
 [e = _minUnits -> & -> _bcdMin `i -> 15 `i `c ]
-"142
-[v _hourTensDis `c ~T0 @X0 1 a ]
-[; ;Functions.c: 142: signed char hourTensDis = hourTens;
-[e = _hourTensDis _hourTens ]
-[; ;Functions.c: 144: switch(hourTens){
-"144
+[; ;Functions.c: 143: switch(hourTens){
+"143
 [e $U 56  ]
 {
-[; ;Functions.c: 145: case 0b00000000 :
-"145
-[e :U 57 ]
-[; ;Functions.c: 146: hourTens = 0;
-"146
-[e = _hourTens -> -> 0 `i `c ]
-[; ;Functions.c: 147: break;
-"147
-[e $U 55  ]
-[; ;Functions.c: 148: case 0b00010000 :
-"148
-[e :U 58 ]
-[; ;Functions.c: 149: hourTens = 1;
-"149
-[e = _hourTens -> -> 1 `i `c ]
-[; ;Functions.c: 150: break;
-"150
-[e $U 55  ]
-[; ;Functions.c: 151: case 0b00100000 :
-"151
-[e :U 59 ]
-[; ;Functions.c: 152: hourTens = 2;
-"152
-[e = _hourTens -> -> 2 `i `c ]
-[; ;Functions.c: 153: break;
-"153
-[e $U 55  ]
-[; ;Functions.c: 154: default :
-"154
-[e :U 60 ]
-[; ;Functions.c: 155: hourTens = 10;
-"155
-[e = _hourTens -> -> 10 `i `c ]
-[; ;Functions.c: 156: break;
-"156
-[e $U 55  ]
-"157
-}
-[; ;Functions.c: 157: }
-[e $U 55  ]
+[; ;Functions.c: 144: case 0b00000000 :
 "144
+[e :U 57 ]
+[; ;Functions.c: 145: hourTens = 0;
+"145
+[e = _hourTens -> -> 0 `i `c ]
+[; ;Functions.c: 146: break;
+"146
+[e $U 55  ]
+[; ;Functions.c: 147: case 0b00010000 :
+"147
+[e :U 58 ]
+[; ;Functions.c: 148: hourTens = 1;
+"148
+[e = _hourTens -> -> 1 `i `c ]
+[; ;Functions.c: 149: break;
+"149
+[e $U 55  ]
+[; ;Functions.c: 150: case 0b00100000 :
+"150
+[e :U 59 ]
+[; ;Functions.c: 151: hourTens = 2;
+"151
+[e = _hourTens -> -> 2 `i `c ]
+[; ;Functions.c: 152: break;
+"152
+[e $U 55  ]
+[; ;Functions.c: 153: default :
+"153
+[e :U 60 ]
+[; ;Functions.c: 154: hourTens = 10;
+"154
+[e = _hourTens -> -> 10 `i `c ]
+[; ;Functions.c: 155: break;
+"155
+[e $U 55  ]
+"156
+}
+[; ;Functions.c: 156: }
+[e $U 55  ]
+"143
 [e :U 56 ]
 [e [\ _hourTens , $ -> -> 0 `i `c 57
  , $ -> -> 16 `i `c 58
  , $ -> -> 32 `i `c 59
  60 ]
-"157
+"156
 [e :U 55 ]
-[; ;Functions.c: 159: switch(hourUnits){
+[; ;Functions.c: 158: if (hourUnits < 10)
+"158
+[e $ ! < -> _hourUnits `i -> 10 `i 61  ]
+[; ;Functions.c: 159: {
 "159
-[e $U 62  ]
 {
-[; ;Functions.c: 160: case 0b00000000 :
+[; ;Functions.c: 160: hourUnits = hourUnits;
 "160
-[e :U 63 ]
-[; ;Functions.c: 161: hourUnits = 0;
+[e = _hourUnits _hourUnits ]
 "161
-[e = _hourUnits -> -> 0 `i `c ]
-[; ;Functions.c: 162: break;
+}
+[; ;Functions.c: 161: }
+[e $U 62  ]
 "162
-[e $U 61  ]
-[; ;Functions.c: 163: case 0b00000001:
-"163
-[e :U 64 ]
-[; ;Functions.c: 164: hourUnits = 1;
-"164
-[e = _hourUnits -> -> 1 `i `c ]
-[; ;Functions.c: 165: break;
-"165
-[e $U 61  ]
-[; ;Functions.c: 166: case 0b00000010:
-"166
-[e :U 65 ]
-[; ;Functions.c: 167: hourUnits = 2;
-"167
-[e = _hourUnits -> -> 2 `i `c ]
-[; ;Functions.c: 168: break;
-"168
-[e $U 61  ]
-[; ;Functions.c: 169: case 0b00000011:
-"169
-[e :U 66 ]
-[; ;Functions.c: 170: hourUnits = 3;
-"170
-[e = _hourUnits -> -> 3 `i `c ]
-[; ;Functions.c: 171: break;
-"171
-[e $U 61  ]
-[; ;Functions.c: 172: case 0b00000100:
-"172
-[e :U 67 ]
-[; ;Functions.c: 173: hourUnits = 4;
-"173
-[e = _hourUnits -> -> 4 `i `c ]
-[; ;Functions.c: 174: break;
-"174
-[e $U 61  ]
-[; ;Functions.c: 175: case 0b00000101:
-"175
-[e :U 68 ]
-[; ;Functions.c: 176: hourUnits = 5;
-"176
-[e = _hourUnits -> -> 5 `i `c ]
-[; ;Functions.c: 177: break;
-"177
-[e $U 61  ]
-[; ;Functions.c: 178: case 0b00000110:
-"178
-[e :U 69 ]
-[; ;Functions.c: 179: hourUnits = 6;
-"179
-[e = _hourUnits -> -> 6 `i `c ]
-[; ;Functions.c: 180: break;
-"180
-[e $U 61  ]
-[; ;Functions.c: 181: case 0b00000111:
-"181
-[e :U 70 ]
-[; ;Functions.c: 182: hourUnits = 7;
-"182
-[e = _hourUnits -> -> 7 `i `c ]
-[; ;Functions.c: 183: break;
-"183
-[e $U 61  ]
-[; ;Functions.c: 184: case 0b00001000:
-"184
-[e :U 71 ]
-[; ;Functions.c: 185: hourUnits = 8;
-"185
-[e = _hourUnits -> -> 8 `i `c ]
-[; ;Functions.c: 186: break;
-"186
-[e $U 61  ]
-[; ;Functions.c: 187: case 0b00001001:
-"187
-[e :U 72 ]
-[; ;Functions.c: 188: hourUnits = 9;
-"188
-[e = _hourUnits -> -> 9 `i `c ]
-[; ;Functions.c: 189: break;
-"189
-[e $U 61  ]
-[; ;Functions.c: 190: default :
-"190
-[e :U 73 ]
-[; ;Functions.c: 191: hourUnits = 10;
-"191
-[e = _hourUnits -> -> 10 `i `c ]
-[; ;Functions.c: 192: break;
-"192
-[e $U 61  ]
-"193
-}
-[; ;Functions.c: 193: }
-[e $U 61  ]
-"159
-[e :U 62 ]
-[e [\ _hourUnits , $ -> -> 0 `i `c 63
- , $ -> -> 1 `i `c 64
- , $ -> -> 2 `i `c 65
- , $ -> -> 3 `i `c 66
- , $ -> -> 4 `i `c 67
- , $ -> -> 5 `i `c 68
- , $ -> -> 6 `i `c 69
- , $ -> -> 7 `i `c 70
- , $ -> -> 8 `i `c 71
- , $ -> -> 9 `i `c 72
- 73 ]
-"193
 [e :U 61 ]
-[; ;Functions.c: 195: switch(minTens){
-"195
-[e $U 75  ]
+[; ;Functions.c: 162: else
+[; ;Functions.c: 163: {
+"163
 {
-[; ;Functions.c: 196: case 0b00000000 :
-"196
-[e :U 76 ]
-[; ;Functions.c: 197: minTens = 0;
-"197
+[; ;Functions.c: 164: hourUnits = 10;
+"164
+[e = _hourUnits -> -> 10 `i `c ]
+"165
+}
+[e :U 62 ]
+[; ;Functions.c: 165: }
+[; ;Functions.c: 167: switch(minTens){
+"167
+[e $U 64  ]
+{
+[; ;Functions.c: 168: case 0b00000000 :
+"168
+[e :U 65 ]
+[; ;Functions.c: 169: minTens = 0;
+"169
 [e = _minTens -> -> 0 `i `c ]
-[; ;Functions.c: 198: break;
-"198
-[e $U 74  ]
-[; ;Functions.c: 199: case 0b00010000 :
-"199
-[e :U 77 ]
-[; ;Functions.c: 200: minTens = 1;
-"200
+[; ;Functions.c: 170: break;
+"170
+[e $U 63  ]
+[; ;Functions.c: 171: case 0b00010000 :
+"171
+[e :U 66 ]
+[; ;Functions.c: 172: minTens = 1;
+"172
 [e = _minTens -> -> 1 `i `c ]
-[; ;Functions.c: 201: break;
-"201
-[e $U 74  ]
-[; ;Functions.c: 202: case 0b00100000 :
-"202
-[e :U 78 ]
-[; ;Functions.c: 203: minTens = 2;
-"203
+[; ;Functions.c: 173: break;
+"173
+[e $U 63  ]
+[; ;Functions.c: 174: case 0b00100000 :
+"174
+[e :U 67 ]
+[; ;Functions.c: 175: minTens = 2;
+"175
 [e = _minTens -> -> 2 `i `c ]
-[; ;Functions.c: 204: break;
-"204
-[e $U 74  ]
-[; ;Functions.c: 205: default :
-"205
-[e :U 79 ]
-[; ;Functions.c: 206: minTens = 10;
-"206
+[; ;Functions.c: 176: break;
+"176
+[e $U 63  ]
+[; ;Functions.c: 177: default :
+"177
+[e :U 68 ]
+[; ;Functions.c: 178: minTens = 10;
+"178
 [e = _minTens -> -> 10 `i `c ]
-[; ;Functions.c: 207: break;
-"207
-[e $U 74  ]
-"208
+[; ;Functions.c: 179: break;
+"179
+[e $U 63  ]
+"180
 }
-[; ;Functions.c: 208: }
-[e $U 74  ]
-"195
-[e :U 75 ]
-[e [\ _minTens , $ -> -> 0 `i `c 76
- , $ -> -> 16 `i `c 77
- , $ -> -> 32 `i `c 78
- 79 ]
-"208
-[e :U 74 ]
-[; ;Functions.c: 211: switch(minUnits){
-"211
-[e $U 81  ]
+[; ;Functions.c: 180: }
+[e $U 63  ]
+"167
+[e :U 64 ]
+[e [\ _minTens , $ -> -> 0 `i `c 65
+ , $ -> -> 16 `i `c 66
+ , $ -> -> 32 `i `c 67
+ 68 ]
+"180
+[e :U 63 ]
+[; ;Functions.c: 183: if (minUnits < 10)
+"183
+[e $ ! < -> _minUnits `i -> 10 `i 69  ]
+[; ;Functions.c: 184: {
+"184
 {
-[; ;Functions.c: 212: case 0b00000000 :
-"212
-[e :U 82 ]
-[; ;Functions.c: 213: minUnits = 0;
-"213
-[e = _minUnits -> -> 0 `i `c ]
-[; ;Functions.c: 214: break;
-"214
-[e $U 80  ]
-[; ;Functions.c: 215: case 0b00000001:
-"215
-[e :U 83 ]
-[; ;Functions.c: 216: minUnits = 1;
-"216
-[e = _minUnits -> -> 1 `i `c ]
-[; ;Functions.c: 217: break;
-"217
-[e $U 80  ]
-[; ;Functions.c: 218: case 0b00000010:
-"218
-[e :U 84 ]
-[; ;Functions.c: 219: minUnits = 2;
-"219
-[e = _minUnits -> -> 2 `i `c ]
-[; ;Functions.c: 220: break;
-"220
-[e $U 80  ]
-[; ;Functions.c: 221: case 0b00000011:
-"221
-[e :U 85 ]
-[; ;Functions.c: 222: minUnits = 3;
-"222
-[e = _minUnits -> -> 3 `i `c ]
-[; ;Functions.c: 223: break;
-"223
-[e $U 80  ]
-[; ;Functions.c: 224: case 0b00000100:
-"224
-[e :U 86 ]
-[; ;Functions.c: 225: minUnits = 4;
-"225
-[e = _minUnits -> -> 4 `i `c ]
-[; ;Functions.c: 226: break;
-"226
-[e $U 80  ]
-[; ;Functions.c: 227: case 0b00000101:
-"227
-[e :U 87 ]
-[; ;Functions.c: 228: minUnits = 5;
-"228
-[e = _minUnits -> -> 5 `i `c ]
-[; ;Functions.c: 229: break;
-"229
-[e $U 80  ]
-[; ;Functions.c: 230: case 0b00000110:
-"230
-[e :U 88 ]
-[; ;Functions.c: 231: minUnits = 6;
-"231
-[e = _minUnits -> -> 6 `i `c ]
-[; ;Functions.c: 232: break;
-"232
-[e $U 80  ]
-[; ;Functions.c: 233: case 0b00000111:
-"233
-[e :U 89 ]
-[; ;Functions.c: 234: minUnits = 7;
-"234
-[e = _minUnits -> -> 7 `i `c ]
-[; ;Functions.c: 235: break;
-"235
-[e $U 80  ]
-[; ;Functions.c: 236: case 0b00001000:
-"236
-[e :U 90 ]
-[; ;Functions.c: 237: minUnits = 8;
-"237
-[e = _minUnits -> -> 8 `i `c ]
-[; ;Functions.c: 238: break;
-"238
-[e $U 80  ]
-[; ;Functions.c: 239: case 0b00001001:
-"239
-[e :U 91 ]
-[; ;Functions.c: 240: minUnits = 9;
-"240
-[e = _minUnits -> -> 9 `i `c ]
-[; ;Functions.c: 241: break;
-"241
-[e $U 80  ]
-[; ;Functions.c: 242: default :
-"242
-[e :U 92 ]
-[; ;Functions.c: 243: minUnits = 10;
-"243
-[e = _minUnits -> -> 10 `i `c ]
-[; ;Functions.c: 244: break;
-"244
-[e $U 80  ]
-"245
+[; ;Functions.c: 185: minUnits = minUnits;
+"185
+[e = _minUnits _minUnits ]
+"186
 }
-[; ;Functions.c: 245: }
-[e $U 80  ]
-"211
-[e :U 81 ]
-[e [\ _minUnits , $ -> -> 0 `i `c 82
- , $ -> -> 1 `i `c 83
- , $ -> -> 2 `i `c 84
- , $ -> -> 3 `i `c 85
- , $ -> -> 4 `i `c 86
- , $ -> -> 5 `i `c 87
- , $ -> -> 6 `i `c 88
- , $ -> -> 7 `i `c 89
- , $ -> -> 8 `i `c 90
- , $ -> -> 9 `i `c 91
- 92 ]
-"245
-[e :U 80 ]
-[; ;Functions.c: 246: }
-"246
+[; ;Functions.c: 186: }
+[e $U 70  ]
+"187
+[e :U 69 ]
+[; ;Functions.c: 187: else
+[; ;Functions.c: 188: {
+"188
+{
+[; ;Functions.c: 189: minUnits = 10;
+"189
+[e = _minUnits -> -> 10 `i `c ]
+"190
+}
+[e :U 70 ]
+[; ;Functions.c: 190: }
+[; ;Functions.c: 191: }
+"191
 [e :UE 54 ]
 }
-"247
+"192
 [v _outputTime `(v ~T0 @X0 1 ef ]
-"248
+"193
 {
-[; ;Functions.c: 247: void outputTime(void)
-[; ;Functions.c: 248: {
+[; ;Functions.c: 192: void outputTime(void)
+[; ;Functions.c: 193: {
 [e :U _outputTime ]
 [f ]
-[; ;Functions.c: 250: PORTA = 0b0001;
-"250
+[; ;Functions.c: 195: PORTA = 0b0001;
+"195
 [e = _PORTA -> -> 1 `i `uc ]
-[; ;Functions.c: 251: setDisplayOutput(hourTens);
-"251
+[; ;Functions.c: 196: setDisplayOutput(hourTens);
+"196
 [e ( _setDisplayOutput (1 _hourTens ]
-[; ;Functions.c: 252: PORTA = 0b0010;
-"252
+[; ;Functions.c: 197: PORTA = 0b0010;
+"197
 [e = _PORTA -> -> 2 `i `uc ]
-[; ;Functions.c: 253: setDisplayOutput(minTens);
-"253
+[; ;Functions.c: 198: setDisplayOutput(minTens);
+"198
 [e ( _setDisplayOutput (1 _minTens ]
-[; ;Functions.c: 254: PORTA = 0b0100;
-"254
+[; ;Functions.c: 199: PORTA = 0b0100;
+"199
 [e = _PORTA -> -> 4 `i `uc ]
-[; ;Functions.c: 255: setDisplayOutput(minUnits);
-"255
+[; ;Functions.c: 200: setDisplayOutput(minUnits);
+"200
 [e ( _setDisplayOutput (1 _minUnits ]
-[; ;Functions.c: 256: PORTA = 0b1000;
-"256
+[; ;Functions.c: 201: PORTA = 0b1000;
+"201
 [e = _PORTA -> -> 8 `i `uc ]
-[; ;Functions.c: 257: setDisplayOutput(hourUnits);
-"257
+[; ;Functions.c: 202: setDisplayOutput(hourUnits);
+"202
 [e ( _setDisplayOutput (1 _hourUnits ]
-[; ;Functions.c: 258: }
-"258
-[e :UE 93 ]
+[; ;Functions.c: 203: }
+"203
+[e :UE 71 ]
 }

@@ -412,7 +412,7 @@ void outputTime(void);
 # 3 "Functions.c"
 void init(void)
 {
-OPTION_REG = 0b00000111;
+OPTION_REG = 0b01000111;
 
 INTCON = 0b10000000;
 
@@ -485,7 +485,7 @@ void minMark(void)
 synced = 0;
 do{
 
-if(RB0 == 0 && synced == 0){
+if(RB0 == 1 && synced == 0){
 INTCON |= 0b00100000;
 }
 else{
@@ -495,7 +495,7 @@ timerCount = 0;
 synced = 1;
 }
 
-}while (!(RB0 == 0 && synced == 1));
+}while (!(RB0 == 1 && synced == 1));
 return;
 }
 
@@ -549,7 +549,6 @@ hourTens = (bcdHour & 0b00110000);
 hourUnits = (bcdHour & 0b00001111);
 minTens = (bcdMin & 0b00110000);
 minUnits = (bcdMin & 0b00001111);
-signed char hourTensDis = hourTens;
 
 switch(hourTens){
 case 0b00000000 :
@@ -566,40 +565,13 @@ hourTens = 10;
 break;
 }
 
-switch(hourUnits){
-case 0b00000000 :
-hourUnits = 0;
-break;
-case 0b00000001:
-hourUnits = 1;
-break;
-case 0b00000010:
-hourUnits = 2;
-break;
-case 0b00000011:
-hourUnits = 3;
-break;
-case 0b00000100:
-hourUnits = 4;
-break;
-case 0b00000101:
-hourUnits = 5;
-break;
-case 0b00000110:
-hourUnits = 6;
-break;
-case 0b00000111:
-hourUnits = 7;
-break;
-case 0b00001000:
-hourUnits = 8;
-break;
-case 0b00001001:
-hourUnits = 9;
-break;
-default :
+if (hourUnits < 10)
+{
+hourUnits = hourUnits;
+}
+else
+{
 hourUnits = 10;
-break;
 }
 
 switch(minTens){
@@ -618,40 +590,13 @@ break;
 }
 
 
-switch(minUnits){
-case 0b00000000 :
-minUnits = 0;
-break;
-case 0b00000001:
-minUnits = 1;
-break;
-case 0b00000010:
-minUnits = 2;
-break;
-case 0b00000011:
-minUnits = 3;
-break;
-case 0b00000100:
-minUnits = 4;
-break;
-case 0b00000101:
-minUnits = 5;
-break;
-case 0b00000110:
-minUnits = 6;
-break;
-case 0b00000111:
-minUnits = 7;
-break;
-case 0b00001000:
-minUnits = 8;
-break;
-case 0b00001001:
-minUnits = 9;
-break;
-default :
+if (minUnits < 10)
+{
+minUnits = minUnits;
+}
+else
+{
 minUnits = 10;
-break;
 }
 }
 void outputTime(void)

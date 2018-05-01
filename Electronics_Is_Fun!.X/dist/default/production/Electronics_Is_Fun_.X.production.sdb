@@ -23,7 +23,7 @@
 [v _setDisplayOutput setDisplayOutput `(v  1 e 1 0 ]
 "136
 [v _updateTime updateTime `(v  1 e 1 0 ]
-"247
+"192
 [v _outputTime outputTime `(v  1 e 1 0 ]
 "12 C:\Users\Home\MPLABXProjects\Electronics_Is_Fun!.X\Main.c
 [v _main main `(i  1 e 2 0 ]
@@ -79,13 +79,10 @@
 {
 "137
 [v updateTime@bcdHour bcdHour `c  1 a 1 wreg ]
-"142
-[v updateTime@hourTensDis hourTensDis `c  1 a 1 10 ]
-"137
 [v updateTime@bcdHour bcdHour `c  1 a 1 wreg ]
 [v updateTime@bcdMin bcdMin `c  1 p 1 8 ]
-[v updateTime@bcdHour bcdHour `c  1 a 1 11 ]
-"246
+[v updateTime@bcdHour bcdHour `c  1 a 1 10 ]
+"191
 } 0
 "65
 [v _resetTime resetTime `(v  1 e 1 0 ]
@@ -107,10 +104,10 @@
 {
 "62
 } 0
-"247
+"192
 [v _outputTime outputTime `(v  1 e 1 0 ]
 {
-"258
+"203
 } 0
 "92
 [v _setDisplayOutput setDisplayOutput `(v  1 e 1 0 ]

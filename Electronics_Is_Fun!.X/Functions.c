@@ -2,7 +2,7 @@
 
 void init(void)
 {
-    OPTION_REG  = 0b00000111; //bit 6 sets EXT interrupt on falling edge
+    OPTION_REG  = 0b01000111; //bit 6 sets EXT interrupt on rising/falling edge
                              //set TMR0 source internal, prescale to TMR0, prescale to 1:256 
     INTCON = 0b10000000; //Set global interrupt enable
     
@@ -22,18 +22,18 @@ void init(void)
     INTCON = 0b10010000;//turn on exturnal interrupt
 }    
 
-void interrupt extInterrupt (void)
+void interrupt Interrupts (void)
 {
-    if (INTE && INTF){
-       INTF = 0;
+    if (INTE && INTF){  //Check if interrupt flag is set
+       INTF = 0;        //clear
        
-       if(synced == 1){
+       if(synced == 1){ //check if timing has been synced by minMark 
            secNo++;
            __delay_ms(150);//wait until data bit A comes through
            
-           if(secNo > 1/*38*/ && secNo < 6/*45*/) //Hour information
+           if(secNo > 38 && secNo < 45) //Hour information
            {
-               bcdHour |= inputPin;
+               bcdHour |= inputPin;    //Store bit value
                bcdHour =  bcdHour << 1; //shift to get ready for next bit
            }
            else if(secNo > 44 && secNo < 60)//minute information
@@ -75,8 +75,8 @@ void minMark(void) //The only time the signal will be off for over 300ms is at
     synced = 0; 
     do{
         
-        if(inputPin == 0 && synced == 0){
-            INTCON |= 0b00100000; //turn on TMR0
+        if(inputPin == 1 && synced == 0){
+            INTCON |= 0b00100000; //turn on TMR0, left on after function ends 
         }
         else{
             INTCON = 0b10010000; //turn off TMR0
@@ -85,7 +85,7 @@ void minMark(void) //The only time the signal will be off for over 300ms is at
             synced = 1;
         }
         
-    }while (!(inputPin == 0 && synced == 1));
+    }while (!(inputPin == 1 && synced == 1));
     return;
 }
 
@@ -139,7 +139,6 @@ void updateTime(signed char bcdHour, signed char bcdMin)
     hourUnits = (bcdHour & 0b00001111); //extract hour units
     minTens = (bcdMin & 0b00110000);// extract minute tens
     minUnits = (bcdMin & 0b00001111);//extract minute minutes
-    signed char hourTensDis = hourTens; 
     
     switch(hourTens){
         case 0b00000000 :
@@ -156,92 +155,38 @@ void updateTime(signed char bcdHour, signed char bcdMin)
             break;
     }
     
-    switch(hourUnits){
-        case 0b00000000 :
-            hourUnits = 0;
-            break;
-        case 0b00000001:
-            hourUnits = 1;
-            break;
-        case 0b00000010:
-            hourUnits = 2;
-            break;
-        case 0b00000011:
-            hourUnits = 3;
-            break;
-        case 0b00000100:
-            hourUnits = 4;
-            break;
-        case 0b00000101:
-            hourUnits = 5;
-            break;
-        case 0b00000110:
-            hourUnits = 6;
-            break;
-        case 0b00000111:
-            hourUnits = 7;
-            break;
-        case 0b00001000:
-            hourUnits = 8;
-            break;
-        case 0b00001001:
-            hourUnits = 9;
-            break;
-        default :
-            hourUnits = 10;
-            break;
+    if (hourUnits < 10)
+    {
+        hourUnits = hourUnits;
+    }
+    else
+    {
+        hourUnits = 10; //Fault state
     }
     
-        switch(minTens){
-        case 0b00000000 :
-            minTens = 0;
-            break;
-        case 0b00010000 : //10
-            minTens = 1;
-            break;
-        case 0b00100000 : //20
-            minTens = 2;
-            break;
-        default :
-            minTens = 10;//fault state
-            break;
+    switch(minTens){
+    case 0b00000000 :
+        minTens = 0;
+        break;
+    case 0b00010000 : //10
+        minTens = 1;
+        break;
+    case 0b00100000 : //20
+        minTens = 2;
+        break;
+    default :
+        minTens = 10;//fault state
+        break;
     }
         
         
-    switch(minUnits){
-        case 0b00000000 :
-            minUnits = 0;
-            break;
-        case 0b00000001:
-            minUnits = 1;
-            break;
-        case 0b00000010:
-            minUnits = 2;
-            break;
-        case 0b00000011:
-            minUnits = 3;
-            break;
-        case 0b00000100:
-            minUnits = 4;
-            break;
-        case 0b00000101:
-            minUnits = 5;
-            break;
-        case 0b00000110:
-            minUnits = 6;
-            break;
-        case 0b00000111:
-            minUnits = 7;
-            break;
-        case 0b00001000:
-            minUnits = 8;
-            break;
-        case 0b00001001:
-            minUnits = 9;
-            break;
-        default :
-            minUnits = 10;
-            break;
+    if (minUnits < 10)
+    {
+        minUnits = minUnits;
+    }
+    else
+    {
+        minUnits = 10; //Fault state
     }
 }
 void outputTime(void)
